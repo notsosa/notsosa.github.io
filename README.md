@@ -45,4 +45,4 @@ pnpm test
 ## Publicación
 
 El flujo `.github/workflows/deploy.yml` genera y publica el sitio en
-`https://notssosa.github.io` después de cada cambio en la rama `main`.
+`https://notsosa.github.io` después de cada cambio en la rama `main`.

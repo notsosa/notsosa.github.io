@@ -17,7 +17,7 @@ test("la página incluye identidad, secciones y contacto", async () => {
   assert.match(app, /id="contacto"/);
   assert.match(app, /mailto:cssosa678@gmail\.com/);
   assert.match(app, /tel:\+50238099691/);
-  assert.match(app, /github\.com\/notssosa/);
+  assert.match(app, /github\.com\/notsosa/);
 });
 
 test("los proyectos usan una fuente de datos editable", async () => {

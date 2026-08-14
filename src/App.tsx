@@ -271,7 +271,7 @@ export default function App() {
             <div className="contact-links">
               <a href="mailto:sos22156@uvg.edu.gt"><span>{copy.universityEmail}</span><strong>sos22156@uvg.edu.gt</strong></a>
               <a href="tel:+50238099691"><span>{copy.phone}</span><strong>+502 3809 9691</strong></a>
-              <a href="https://github.com/notssosa" target="_blank" rel="noreferrer"><span>GitHub</span><strong>@notssosa ↗</strong></a>
+              <a href="https://github.com/notsosa" target="_blank" rel="noreferrer"><span>GitHub</span><strong>@notsosa ↗</strong></a>
             </div>
           </div>
         </section>
