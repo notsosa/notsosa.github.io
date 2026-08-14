@@ -6,18 +6,25 @@ Pages.
 
 ## Agregar un proyecto desde GitHub
 
-1. Entra a la carpeta `public/projects` y usa **Add file → Upload files** para
-   subir la imagen del proyecto.
+1. Crea una carpeta para el proyecto dentro de `public/projects` y usa
+   **Add file → Upload files** para subir sus imágenes o video.
 2. Abre `src/data/projects.ts` y presiona el ícono del lápiz.
-3. Copia una ficha existente y cambia título, descripción, tecnologías y
-   enlaces.
-4. En `image`, escribe la ruta de la imagen, por ejemplo
-   `"/projects/robot-seguidor.jpg"`.
-5. Guarda los cambios con **Commit changes**. GitHub actualizará la página de
+3. Copia una ficha existente y completa en español el título, la descripción,
+   las tecnologías y los enlaces.
+4. En `images`, agrega una ficha por imagen con su ruta, texto alternativo y
+   título. Usa una ruta como `"/projects/robot-seguidor/portada.jpg"`.
+   Si el proyecto usa video, completa `video` con su ruta, etiqueta accesible y
+   título; conserva `video: null` cuando no sea necesario.
+5. Agrega la versión en inglés con el mismo `id` dentro de
+   `src/data/projectTranslations.ts`.
+6. Guarda los cambios con **Commit changes**. GitHub actualizará la página de
    manera automática en unos minutos.
 
 Los campos `repository` y `demo` aceptan un enlace o `null` si todavía no están
 disponibles.
+
+Los textos generales de navegación y secciones se encuentran en
+`src/data/content.ts`, organizados en bloques `es` y `en`.
 
 ## Trabajar localmente
 

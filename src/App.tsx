@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import { projects, type Project } from "./data/projects";
+import { useEffect, useState } from "react";
+import { pageContent } from "./data/content";
+import { translateProject } from "./data/projectTranslations";
+import { projects, type Language, type Project } from "./data/projects";
 
-const areas = [
-  { number: "01", title: "Mecánica", text: "Diseño y comprensión de sistemas físicos." },
-  { number: "02", title: "Electrónica", text: "Sensores, actuadores y circuitos que conectan el sistema." },
-  { number: "03", title: "Control", text: "Decisiones, retroalimentación y comportamiento medible." },
-  { number: "04", title: "Código", text: "Lógica que convierte componentes en soluciones." },
-];
+type PageCopy = (typeof pageContent)[Language];
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index, copy }: { project: Project; index: number; copy: PageCopy }) {
+  const mediaCount = project.images.length + (project.video ? 1 : 0);
+  const hasMedia = mediaCount > 0;
+
   return (
     <article className={`project-card project-card--${project.accent}`} data-reveal>
       <div className="project-copy">
@@ -18,36 +18,81 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
         <h3>{project.title}</h3>
         <p>{project.description}</p>
-        <ul className="tag-list" aria-label="Tecnologías">
+        {project.metrics.length > 0 && (
+          <dl className="project-metrics" aria-label={copy.metricsAria}>
+            {project.metrics.map((metric) => (
+              <div key={metric.label}>
+                <dt>{metric.label}</dt>
+                <dd>{metric.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        <ul className="tag-list" aria-label={copy.technologiesAria}>
           {project.technologies.map((technology) => (
             <li key={technology}>{technology}</li>
           ))}
         </ul>
-        <div className="project-links">
-          {project.repository ? (
-            <a href={project.repository} target="_blank" rel="noreferrer">
-              Ver repositorio <span aria-hidden="true">↗</span>
-            </a>
-          ) : (
-            <span>Repositorio por añadir</span>
-          )}
-          {project.demo && (
-            <a href={project.demo} target="_blank" rel="noreferrer">
-              Ver demostración <span aria-hidden="true">↗</span>
-            </a>
-          )}
-        </div>
+        {(project.repository || project.demo || !hasMedia) && (
+          <div className="project-links">
+            {project.repository ? (
+              <a href={project.repository} target="_blank" rel="noreferrer">
+                {copy.repository} <span aria-hidden="true">↗</span>
+              </a>
+            ) : !hasMedia ? (
+              <span>{copy.repositoryPending}</span>
+            ) : null}
+            {project.demo && (
+              <a href={project.demo} target="_blank" rel="noreferrer">
+                {copy.demo} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="project-media">
-        {project.image ? (
-          <img src={project.image} alt={`Vista del proyecto ${project.title}`} />
+      <div
+        className={`project-media${mediaCount > 1 ? " project-media--gallery" : ""}${
+          mediaCount === 2 ? " project-media--two" : ""
+        }${
+          mediaCount === 4 ? " project-media--four" : ""
+        }`}
+      >
+        {hasMedia ? (
+          <>
+            {project.video && (
+              <figure className={`project-video${mediaCount > 1 ? " project-video--tile" : ""}`}>
+                <video controls playsInline preload="metadata" aria-label={project.video.label}>
+                  <source src={project.video.src} type="video/mp4" />
+                  {copy.videoUnsupported}
+                </video>
+                <figcaption>{project.video.caption}</figcaption>
+              </figure>
+            )}
+            {project.images.map((image, imageIndex) => (
+              <figure
+                className={
+                  !project.video && imageIndex === 0
+                    ? "project-image project-image--primary"
+                    : "project-image"
+                }
+                key={image.src}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  style={{ objectPosition: image.position, objectFit: image.fit }}
+                />
+                <figcaption>{image.caption}</figcaption>
+              </figure>
+            ))}
+          </>
         ) : (
-          <div className="project-placeholder" aria-label="Espacio reservado para la imagen del proyecto">
+          <div className="project-placeholder" aria-label={copy.mediaPlaceholderAria}>
             <span className="placeholder-orbit placeholder-orbit--one" />
             <span className="placeholder-orbit placeholder-orbit--two" />
             <span className="placeholder-core">{String(index + 1).padStart(2, "0")}</span>
-            <small>Tu proyecto aquí</small>
+            <small>{copy.mediaPlaceholder}</small>
           </div>
         )}
       </div>
@@ -56,6 +101,20 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export default function App() {
+  const [language, setLanguage] = useState<Language>(() =>
+    window.localStorage.getItem("portfolio-language") === "en" ? "en" : "es",
+  );
+  const copy = pageContent[language];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = copy.metaTitle;
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute("content", copy.metaDescription);
+    window.localStorage.setItem("portfolio-language", language);
+  }, [copy.metaDescription, copy.metaTitle, language]);
+
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -83,15 +142,32 @@ export default function App() {
 
   return (
     <>
-      <a className="skip-link" href="#contenido">Saltar al contenido</a>
+      <a className="skip-link" href="#contenido">{copy.skipLink}</a>
 
       <header className="site-header">
-        <nav className="nav-shell" aria-label="Navegación principal">
-          <a className="nav-brand" href="#inicio" aria-label="Carlos Sosa, ir al inicio">CS</a>
-          <div className="nav-links">
-            <a href="#sobre-mi">Sobre mí</a>
-            <a href="#proyectos">Proyectos</a>
-            <a href="#contacto">Contacto</a>
+        <nav className="nav-shell" aria-label={copy.navAria}>
+          <a className="nav-brand" href="#inicio" aria-label={copy.navBrandAria}>CS</a>
+          <div className="nav-actions">
+            <div className="nav-links">
+              <a href="#sobre-mi">{copy.nav.about}</a>
+              <a href="#proyectos">{copy.nav.projects}</a>
+              <a href="#contacto">{copy.nav.contact}</a>
+            </div>
+            <div className="language-switcher" role="group" aria-label={copy.languageGroup}>
+              <span className={`language-code${language === "es" ? " is-active" : ""}`}>ES</span>
+              <button
+                className={`language-switch${language === "en" ? " is-english" : ""}`}
+                type="button"
+                role="switch"
+                aria-checked={language === "en"}
+                aria-label={copy.switchLanguage}
+                title={copy.switchLanguage}
+                onClick={() => setLanguage((current) => (current === "es" ? "en" : "es"))}
+              >
+                <span className="language-switch__thumb" />
+              </button>
+              <span className={`language-code${language === "en" ? " is-active" : ""}`}>EN</span>
+            </div>
           </div>
         </nav>
       </header>
@@ -101,64 +177,62 @@ export default function App() {
           <div className="hero-glow hero-glow--blue" />
           <div className="hero-glow hero-glow--violet" />
           <div className="hero-content" data-reveal>
-            <p className="eyebrow">Carlos Sosa · Ingeniería Mecatrónica</p>
+            <p className="eyebrow">{copy.heroEyebrow}</p>
             <h1>
-              Ingeniería que <span>se mueve, piensa</span> y conecta.
+              {copy.heroLead}<span>{copy.heroAccent}</span>{copy.heroTail}
             </h1>
-            <p className="hero-intro">
-              Exploro cómo la mecánica, la electrónica, el control y el código pueden convertirse en sistemas claros, útiles y bien construidos.
-            </p>
+            <p className="hero-intro">{copy.heroIntro}</p>
             <div className="hero-actions">
-              <a className="button button--primary" href="#proyectos">Explorar proyectos</a>
-              <a className="button button--secondary" href="mailto:cssosa678@gmail.com">Hablemos <span aria-hidden="true">↗</span></a>
+              <a className="button button--primary" href="#proyectos">{copy.exploreProjects}</a>
+              <a className="button button--secondary" href="mailto:cssosa678@gmail.com">{copy.letsTalk} <span aria-hidden="true">↗</span></a>
             </div>
           </div>
 
-          <div className="system-window" data-reveal aria-label="Diagrama conceptual de las áreas de la mecatrónica">
+          <div className="system-window" data-reveal aria-label={copy.systemAria}>
             <div className="system-window__top">
-              <span>Sistema / 001</span>
-              <span>Integración activa</span>
+              <span>{copy.systemId}</span>
+              <span>{copy.systemActive}</span>
             </div>
             <div className="system-stage">
               <span className="system-ring system-ring--outer" />
               <span className="system-ring system-ring--inner" />
-              <div className="system-core"><strong>CS</strong><small>Mecatrónica</small></div>
-              <span className="system-label system-label--mechanics">Mecánica</span>
-              <span className="system-label system-label--electronics">Electrónica</span>
-              <span className="system-label system-label--control">Control</span>
-              <span className="system-label system-label--code">Código</span>
+              <div className="system-core"><strong>CS</strong><small>{copy.mechatronics}</small></div>
+              <span className="system-label system-label--mechanics">{copy.systemLabels.mechanics}</span>
+              <span className="system-label system-label--electronics">{copy.systemLabels.electronics}</span>
+              <span className="system-label system-label--manufacturing">{copy.systemLabels.manufacturing}</span>
+              <span className="system-label system-label--code">{copy.systemLabels.code}</span>
             </div>
           </div>
         </section>
 
         <section className="section section--white" id="sobre-mi">
           <div className="section-heading" data-reveal>
-            <p className="eyebrow">Sobre mí</p>
-            <h2>Aprender construyendo.<br />Entender integrando.</h2>
+            <p className="eyebrow">{copy.aboutEyebrow}</p>
+            <h2>{copy.aboutTitle[0]}<br />{copy.aboutTitle[1]}</h2>
           </div>
 
           <div className="about-grid">
             <article className="about-card about-card--statement" data-reveal>
-              <p>
-                Soy Carlos, estudiante de Ingeniería Mecatrónica. Este portafolio reúne el proceso detrás de mis proyectos universitarios: las preguntas, las pruebas y las decisiones que convierten una idea en algo real.
-              </p>
-              <span>Guatemala · En formación continua</span>
+              <p>{copy.aboutStatement}</p>
+              <span>{copy.aboutLocation}</span>
             </article>
 
             <article className="about-card about-card--principles" data-reveal>
-              <p className="card-label">Mi manera de trabajar</p>
+              <p className="card-label">{copy.workStyle}</p>
               <ol>
-                <li><span>01</span><strong>Observar</strong></li>
-                <li><span>02</span><strong>Prototipar</strong></li>
-                <li><span>03</span><strong>Medir</strong></li>
-                <li><span>04</span><strong>Mejorar</strong></li>
+                {copy.principles.map((principle, index) => (
+                  <li key={principle}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <strong>{principle}</strong>
+                  </li>
+                ))}
               </ol>
             </article>
           </div>
 
-          <div className="areas-grid" aria-label="Áreas de formación">
-            {areas.map((area) => (
-              <article className="area-card" key={area.title} data-reveal>
+          <div className="areas-grid" aria-label={copy.areasAria}>
+            {copy.areas.map((area) => (
+              <article className="area-card" key={area.number} data-reveal>
                 <span>{area.number}</span>
                 <h3>{area.title}</h3>
                 <p>{area.text}</p>
@@ -169,29 +243,34 @@ export default function App() {
 
         <section className="section projects" id="proyectos">
           <div className="section-heading section-heading--center" data-reveal>
-            <p className="eyebrow">Proyectos universitarios</p>
-            <h2>Del concepto<br />al sistema.</h2>
-            <p className="section-intro">La estructura está lista. Aquí irán las imágenes, el proceso y los resultados de cada proyecto.</p>
+            <p className="eyebrow">{copy.projectsEyebrow}</p>
+            <h2>{copy.projectsTitle[0]}<br />{copy.projectsTitle[1]}</h2>
+            <p className="section-intro">{copy.projectsIntro}</p>
           </div>
 
           <div className="projects-list">
             {projects.map((project, index) => (
-              <ProjectCard key={project.id} project={project} index={index} />
+              <ProjectCard
+                key={project.id}
+                project={translateProject(project, language)}
+                index={index}
+                copy={copy}
+              />
             ))}
           </div>
         </section>
 
         <section className="contact-section" id="contacto">
           <div className="contact-card" data-reveal>
-            <p className="eyebrow">Contacto</p>
-            <h2>¿Hacemos que una idea funcione?</h2>
-            <p>Estoy abierto a conversaciones sobre proyectos, aprendizaje y oportunidades profesionales.</p>
+            <p className="eyebrow">{copy.contactEyebrow}</p>
+            <h2>{copy.contactTitle}</h2>
+            <p>{copy.contactIntro}</p>
             <div className="contact-primary">
               <a href="mailto:cssosa678@gmail.com">cssosa678@gmail.com <span aria-hidden="true">↗</span></a>
             </div>
             <div className="contact-links">
-              <a href="mailto:sos22156@uvg.edu.gt"><span>Correo universitario</span><strong>sos22156@uvg.edu.gt</strong></a>
-              <a href="tel:+50238099691"><span>Teléfono</span><strong>+502 3809 9691</strong></a>
+              <a href="mailto:sos22156@uvg.edu.gt"><span>{copy.universityEmail}</span><strong>sos22156@uvg.edu.gt</strong></a>
+              <a href="tel:+50238099691"><span>{copy.phone}</span><strong>+502 3809 9691</strong></a>
               <a href="https://github.com/notssosa" target="_blank" rel="noreferrer"><span>GitHub</span><strong>@notssosa ↗</strong></a>
             </div>
           </div>
@@ -200,7 +279,7 @@ export default function App() {
 
       <footer>
         <span>© {new Date().getFullYear()} Carlos Sosa</span>
-        <a href="#inicio">Volver arriba ↑</a>
+        <a href="#inicio">{copy.backToTop} ↑</a>
       </footer>
     </>
   );

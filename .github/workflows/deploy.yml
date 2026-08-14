@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Preparar pnpm
         uses: pnpm/action-setup@v4
@@ -27,7 +27,7 @@ jobs:
           version: 11.19.0
 
       - name: Preparar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
@@ -42,7 +42,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Preparar publicación
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
 
