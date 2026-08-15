@@ -111,12 +111,13 @@ a { color: inherit; text-decoration: none; }
 .project-links { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 30px; font-size: 12px; font-weight: 600; }
 .project-links a { color: var(--blue); }
 .project-links > span { color: #99999e; }
-.project-media { min-height: 558px; overflow: hidden; border-radius: 28px; background: #e9eaee; }
+.project-media { height: 558px; min-height: 0; overflow: hidden; border-radius: 28px; background: #e9eaee; }
 .project-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .project-media--gallery { height: 558px; min-height: 0; padding: 8px; display: grid; grid-template-columns: 1.08fr .92fr; grid-template-rows: 1fr 1fr; gap: 8px; background: #e9eaee; }
 .project-media--two { grid-template-columns: 1.2fr .8fr; grid-template-rows: 1fr; }
 .project-media--four { grid-template-rows: repeat(3, 1fr); }
 .project-image { position: relative; min-width: 0; min-height: 0; margin: 0; overflow: hidden; border-radius: 19px; background: #d7d8dd; }
+.project-media:not(.project-media--gallery) > .project-image { height: 100%; }
 .project-image--primary { grid-row: 1 / -1; }
 .project-media--two .project-image--primary { grid-row: auto; }
 .project-image figcaption, .project-video figcaption { position: absolute; left: 12px; bottom: 12px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.65); border-radius: 999px; background: rgba(248,248,250,.8); color: #48484d; box-shadow: 0 6px 20px rgba(0,0,0,.1); backdrop-filter: blur(14px); font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
@@ -201,9 +202,9 @@ footer { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 
   .area-card { min-height: 220px; }
   .project-card { min-height: 0; padding: 10px; border-radius: 28px; gap: 10px; }
   .project-copy { min-height: 380px; padding: 24px 18px; }
-  .project-media, .project-placeholder, .project-video { min-height: 420px; }
+  .project-media { height: 420px; min-height: 0; border-radius: 21px; }
+  .project-placeholder, .project-video { min-height: 420px; }
   .project-video--tile { min-height: 0; }
-  .project-media { border-radius: 21px; }
   .project-media--gallery { height: auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 350px 210px; }
   .project-image--primary { grid-column: 1 / -1; grid-row: auto; }
   .project-media--two { grid-template-columns: 1fr; grid-template-rows: 260px 420px; }
