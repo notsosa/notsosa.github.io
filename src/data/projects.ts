@@ -6,6 +6,7 @@ export type ProjectImage = {
   caption: string;
   position?: string;
   fit?: "cover" | "contain";
+  background?: string;
 };
 
 export type ProjectMetric = {
@@ -229,12 +230,14 @@ export const projects: Project[] = [
         alt: "Diseño CAD del fixture para probar una PCB, con mecanismo de inserción y soportes para batería y panel solar",
         caption: "Fixture diseñado en Onshape",
         fit: "contain",
+        background: "#333333",
       },
       {
         src: "/projects/pcb-breakout-qa/pcb-ensamblada.jpeg",
         alt: "PCB breakout ensamblada con terminales, conectores y puntos de prueba para aseguramiento de calidad",
         caption: "PCB breakout",
         fit: "contain",
+        background: "#080d16",
       },
     ],
     video: null,

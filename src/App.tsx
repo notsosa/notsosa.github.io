@@ -77,6 +77,7 @@ function ProjectCard({ project, index, copy }: { project: Project; index: number
                     : "project-image"
                 }
                 key={image.src}
+                style={{ background: image.background }}
               >
                 <img
                   src={image.src}
