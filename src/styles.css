@@ -87,13 +87,6 @@ a { color: inherit; text-decoration: none; }
 .about-card li { display: flex; align-items: center; gap: 18px; padding: 19px 0; border-bottom: 1px solid #dedee2; }
 .about-card li span { color: #99999e; font-size: 11px; }
 .about-card li strong { font-size: 22px; letter-spacing: -.03em; }
-.areas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
-.area-card { min-height: 270px; padding: 30px; display: flex; flex-direction: column; border-radius: 28px; background: #f5f5f7; transition: transform 220ms ease, box-shadow 220ms ease; }
-.area-card:hover { transform: translateY(-5px); box-shadow: 0 20px 45px rgba(0,0,0,.07); }
-.area-card > span { color: #99999e; font-size: 11px; }
-.area-card h3 { margin: auto 0 12px; font-size: 27px; letter-spacing: -.04em; }
-.area-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
-
 .projects { background: #f5f5f7; }
 .projects-list { display: grid; gap: 24px; }
 .project-card { min-height: 610px; padding: 26px; display: grid; grid-template-columns: .86fr 1.14fr; gap: 26px; overflow: hidden; border-radius: 40px; background: #fff; box-shadow: 0 18px 55px rgba(0,0,0,.055); }
@@ -162,7 +155,6 @@ footer { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 
   .system-window { min-height: 520px; }
   .system-stage { height: 445px; }
   .about-grid { grid-template-columns: 1fr; }
-  .areas-grid { grid-template-columns: repeat(2, 1fr); }
   .project-card { grid-template-columns: 1fr; }
   .project-copy { min-height: 400px; }
   .contact-links { grid-template-columns: 1fr; }
@@ -198,8 +190,6 @@ footer { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 
   .section-heading { margin-bottom: 50px; padding: 0 8px; }
   .about-card { min-height: 360px; border-radius: 28px; }
   .about-card--principles { padding: 30px; }
-  .areas-grid { grid-template-columns: 1fr; }
-  .area-card { min-height: 220px; }
   .project-card { min-height: 0; padding: 10px; border-radius: 28px; gap: 10px; }
   .project-copy { min-height: 380px; padding: 24px 18px; }
   .project-media { height: 420px; min-height: 0; border-radius: 21px; }
@@ -208,6 +198,7 @@ footer { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 
   .project-media--gallery { height: auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 350px 210px; }
   .project-image--primary { grid-column: 1 / -1; grid-row: auto; }
   .project-media--two { grid-template-columns: 1fr; grid-template-rows: 260px 420px; }
+  .project-card[data-project="controlador-esp-modular"] .project-media--two { grid-template-rows: 320px 320px; }
   .project-media--two .project-image--primary { grid-column: auto; }
   .project-media--four { grid-template-rows: 330px 190px 190px; }
   .project-media--four .project-image:last-child { grid-column: 1 / -1; }

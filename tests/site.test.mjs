@@ -78,6 +78,8 @@ test("la interfaz permite alternar todo el contenido entre español e inglés", 
   assert.match(app, /translateProject\(project, language\)/);
   assert.match(app, /system-label--manufacturing/);
   assert.doesNotMatch(app, /system-label--control/);
+  assert.doesNotMatch(app, /areas-grid/);
+  assert.doesNotMatch(app, /area-card/);
   assert.match(content, /Manufactura/);
   assert.match(content, /Manufacturing/);
   assert.match(content, /Switch to Spanish/);

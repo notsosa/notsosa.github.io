@@ -10,7 +10,11 @@ function ProjectCard({ project, index, copy }: { project: Project; index: number
   const hasMedia = mediaCount > 0;
 
   return (
-    <article className={`project-card project-card--${project.accent}`} data-reveal>
+    <article
+      className={`project-card project-card--${project.accent}`}
+      data-project={project.id}
+      data-reveal
+    >
       <div className="project-copy">
         <div className="project-kicker">
           <span>{String(index + 1).padStart(2, "0")}</span>
@@ -231,15 +235,6 @@ export default function App() {
             </article>
           </div>
 
-          <div className="areas-grid" aria-label={copy.areasAria}>
-            {copy.areas.map((area) => (
-              <article className="area-card" key={area.number} data-reveal>
-                <span>{area.number}</span>
-                <h3>{area.title}</h3>
-                <p>{area.text}</p>
-              </article>
-            ))}
-          </div>
         </section>
 
         <section className="section projects" id="proyectos">
